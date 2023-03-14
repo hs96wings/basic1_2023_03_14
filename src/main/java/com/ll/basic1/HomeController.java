@@ -1,5 +1,7 @@
 package com.ll.basic1;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,17 +12,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RestController
 public class HomeController {
-    private int num;
+    private int cnt;
     private List<Person> people = new ArrayList<>();
 
     public HomeController() {
-        this.num = 0;
+        this.cnt = 0;
         this.people = new ArrayList<>();
     }
 
@@ -44,8 +47,8 @@ public class HomeController {
 
     @GetMapping("/home/increase")
     @ResponseBody
-    public String showIncrease() {
-        return "응답: " + num++;
+    public int showIncrease() {
+        return ++cnt;
     }
 
     @GetMapping("/home/plus")
@@ -77,16 +80,35 @@ public class HomeController {
             return "%d번 사람이 존재하지 않습니다".formatted(id);
         return "%d번 사람이 삭제되었습니다".formatted(id);
     }
+
+    @GetMapping("/home/modifyPerson")
+    @ResponseBody
+    public String modifyPerson(@RequestParam int id, @RequestParam String name, @RequestParam int age) {
+        Person found = people
+                .stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (found == null) {
+            return "%d번 사람이 존재하지 않습니다".formatted(id);
+        }
+
+        found.setName(name);
+        found.setAge(age);
+        return "%d번 사람이 수정되었습니다".formatted(id);
+    }
 }
 
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 class Person {
     private static int lastId;
     private final int id;
-    private final String name;
-    private final int age;
+    private String name;
+    private int age;
 
     static {
         lastId = 0;
