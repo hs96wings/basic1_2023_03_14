@@ -66,7 +66,7 @@ public class MemberController {
             loginedMemberId = Arrays.stream(req.getCookies())
                     .filter(cookie -> cookie.getName().equals("loginedMemberId"))
                     .map(Cookie::getValue)
-                    .mapToInt(Integer::parseInt)
+                    .mapToLong(Long::parseLong)
                     .findFirst()
                     .orElse(0);
         }
