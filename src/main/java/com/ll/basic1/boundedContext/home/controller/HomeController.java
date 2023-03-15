@@ -1,5 +1,7 @@
 package com.ll.basic1.boundedContext.home.controller;
 
+import com.ll.basic1.boundedContext.member.entity.Member;
+import com.ll.basic1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,10 +25,12 @@ import java.util.List;
 public class HomeController {
     private int cnt;
     private List<Person> people = new ArrayList<>();
+    private MemberService memberService;
 
     public HomeController() {
         this.cnt = 0;
         this.people = new ArrayList<>();
+        memberService = new MemberService();
     }
 
     @GetMapping("/home/main")
@@ -117,6 +121,12 @@ public class HomeController {
         res.addCookie(new Cookie("count", countInCookie + 1 + ""));
 
         return countInCookie;
+    }
+
+    @GetMapping("/home/user1")
+    @ResponseBody
+    public Member showUser1() {
+        return memberService.findByUsername("user1");
     }
 }
 
