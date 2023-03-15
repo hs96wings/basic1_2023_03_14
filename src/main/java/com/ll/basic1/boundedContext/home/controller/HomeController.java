@@ -25,13 +25,14 @@ import java.util.List;
 @RestController
 public class HomeController {
     private int cnt;
-    private List<Person> people = new ArrayList<>();
+    private final List<Person> people;
     @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    public HomeController() {
+    public HomeController(MemberService memberService) {
         this.cnt = 0;
         this.people = new ArrayList<>();
+        this.memberService = memberService;
     }
 
     @GetMapping("/home/main")
