@@ -1,5 +1,6 @@
 package com.ll.basic1;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -97,6 +99,24 @@ public class HomeController {
         found.setName(name);
         found.setAge(age);
         return "%d번 사람이 수정되었습니다".formatted(id);
+    }
+
+    @GetMapping("/home/cookie/increase")
+    @ResponseBody
+    public int showCookieIncrease(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        int countInCookie = 0;
+        if (req.getCookies() != null) {
+            countInCookie = Arrays.stream(req.getCookies())
+                    .filter(cookie -> cookie.getName().equals("count"))
+                    .map(cookie -> cookie.getValue())
+                    .mapToInt(Integer::parseInt)
+                    .findFirst()
+                    .orElse(0);
+        }
+
+        res.addCookie(new Cookie("count", countInCookie + 1 + ""));
+
+        return countInCookie;
     }
 }
 
