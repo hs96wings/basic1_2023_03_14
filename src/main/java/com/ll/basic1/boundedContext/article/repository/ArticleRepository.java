@@ -1,4 +1,4 @@
-package com.ll.basic1.boundedContext.repository;
+package com.ll.basic1.boundedContext.article.repository;
 
 import com.ll.basic1.boundedContext.article.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
