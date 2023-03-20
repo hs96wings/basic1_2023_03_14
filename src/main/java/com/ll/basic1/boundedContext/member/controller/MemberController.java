@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @AllArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-
     private final Rq rq;
-
 
     @GetMapping("/member/login")
     public String showLogin() {
@@ -28,11 +26,11 @@ public class MemberController {
     @ResponseBody
     public RsData login(String username, String password) {
         if (username == null || username.trim().length() == 0) {
-            return RsData.of("F-3", "username (을)를 입력해주세요");
+            return RsData.of("F-3", "username(을)를 입력해주세요.");
         }
 
         if (password == null || password.trim().length() == 0) {
-            return RsData.of("F-4", "password (을)를 입력해주세요");
+            return RsData.of("F-4", "password(을)를 입력해주세요.");
         }
 
         RsData rsData = memberService.tryLogin(username, password);
@@ -41,6 +39,7 @@ public class MemberController {
             Member member = (Member) rsData.getData();
             rq.setSession("loginedMemberId", member.getId());
         }
+
         return rsData;
     }
 
@@ -49,9 +48,11 @@ public class MemberController {
     public RsData logout() {
         boolean cookieRemoved = rq.removeSession("loginedMemberId");
 
-        if (!cookieRemoved)
-            return RsData.of("S-2", "이미 로그아웃된 상태입니다");
-        return RsData.of("S-1", "로그아웃 되었습니다");
+        if (cookieRemoved == false) {
+            return RsData.of("S-2", "이미 로그아웃 상태입니다.");
+        }
+
+        return RsData.of("S-1", "로그아웃 되었습니다.");
     }
 
     @GetMapping("/member/me")
@@ -59,6 +60,7 @@ public class MemberController {
         long loginedMemberId = rq.getLoginedMemberId();
 
         Member member = memberService.findById(loginedMemberId);
+
         model.addAttribute("member", member);
 
         return "usr/member/me";
